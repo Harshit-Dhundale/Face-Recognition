@@ -1,0 +1,1 @@
+C:/Users/harsh/Desktop/Project Review 287/face-recognition-python-code/train

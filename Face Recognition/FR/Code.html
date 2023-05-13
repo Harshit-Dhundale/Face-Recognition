@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code</title>
+</head>
+<body>
+<h1> OUR CODE FOR FACE RECOGNITION</h1>
+    <h3>
+# Importing Required Libraries: <br><br>
+
+import face_recognition as fr <br>
+import cv2<br>
+import numpy as np<br>
+import os<br><br><br>
+
+# Variables Used:<br><br>
+
+path = "C:/Users/harsh/Desktop/Project Review 287/face-recognition-python-code/train/"<br>
+path1 = "D:/MEDIA/img_align_celeba/img_align_celeba/"<br>
+known_names = []<br>
+known_name_encodings = []<br><br><br>
+
+# Training AI:<br><br>
+
+for x in os.listdir(path):<br>
+    image = fr.load_image_file(path + x)<br>
+    image_path = path + x<br>
+    encoding = fr.face_encodings(image)[0]<br>
+    known_name_encodings.append(encoding)<br>
+    known_names.append(os.path.splitext(os.path.basename(image_path))[0].capitalize())<br><br><br>
+
+# Testing the AI:<br><br>
+
+file_path = input("Enter the File Path of the Test Image:" )<br>
+lenght = len(file_path)<br>
+test_image = file_path[1:lenght-1]<br><br><br>
+
+# Recognizing Faces:<br><br>
+
+image = cv2.imread(test_image)<br>
+face_locations = fr.face_locations(image)<br>
+face_encodings = fr.face_encodings(image, face_locations)<br>
+for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):<br>
+   matches = fr.compare_faces(known_name_encodings, face_encoding)<br>
+   name = ""<br><br>
+
+   face_distances = fr.face_distance(known_name_encodings, face_encoding)<br>
+   best_match = np.argmin(face_distances)<br><br>
+
+   if matches[best_match]:<br>
+       name = known_names[best_match]<br><br>
+
+   cv2.rectangle(image, (left, top), (right, bottom), (0, 0, 255), 2)<br>
+   cv2.rectangle(image, (left, bottom), (right, bottom), (0, 0, 255), cv2.FILLED)<br><br>
+
+   font = cv2.FONT_HERSHEY_DUPLEX<br>
+   cv2.putText(image, name, (left + 6, bottom - 6), font, 1.0, (55,255,20), 1)<br><br>
+
+
+cv2.imshow("Face Recognition", image)<br>
+cv2.imwrite("./output.jpg", image)<br>
+cv2.waitKey(0)<br>
+cv2.destroyAllWindows()<br>
+
+</h3>
+
+</body>
+</html>
